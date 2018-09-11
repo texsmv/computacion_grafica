@@ -1,0 +1,21 @@
+width = 42cm
+height = 31cm
+ndh = 546
+ndv = 434
+
+
+vert_dot_size = (31 * 10) / 434
+vert_dot_size = 0.714285
+hor_dot_size = (42 * 10) / 546
+vert_dot_size = 0.769230
+
+razon_aspecto_grafico = vert_dot_size / hor_dot_size
+razon_aspecto_grafico = 0.928571
+
+razon_aspecto_fisico = 31cm / 42cm
+razon_aspecto_fisico = 0.738095
+
+horiz_res = 546 / (42 * 10)
+horiz_res = 1.3
+vert_res = 434 / (31 * 10)
+vert_res = 1.4

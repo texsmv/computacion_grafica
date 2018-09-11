@@ -1,0 +1,18 @@
+
+bool penUp = True
+
+
+func pen_up(){
+  penUp = True
+}
+
+func pen_down(){
+  penUp = False
+}
+
+func locate(x, y){
+  if penUp:
+    move_to(x, y)
+  else:
+    draw_to(x, y)
+}

@@ -3,10 +3,9 @@
 using namespace std;
 
 void inp_to_ndc(int ndh, int ndv, int dcx, int dcy, float& ndcx, float& ndcy){
-  int ndhm1 = ndh;
-  int ndvm1 = ndv;
-  ndcx = ((float) dcx / ndhm1) * 2 - 1;
-  ndcy = ((float) dcy / ndvm1) * 2 - 1;
+
+  ndcx = ((float) dcx / ndh) * 2 - 1;
+  ndcy = ((float) dcy / ndv) * 2 - 1;
 }
 
 
