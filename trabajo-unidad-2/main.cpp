@@ -1,11 +1,7 @@
-#include <GL/glut.h>
-#include <iostream>
-#include <math.h>
-#include <vector>
-#include "funciones.h"
+#include "figura.h"
+#include "control.h"
 
-using namespace std;
-float pi2 = 6.28318530718;
+
 
 
 
@@ -22,6 +18,8 @@ int main(int argc, char** argv)
     init();
 
     glutDisplayFunc(display);
+    glutMouseFunc(mouse_controller);
+    glutKeyboardFunc(keyboard_controller);
     glutMainLoop();
     return 0;
 }

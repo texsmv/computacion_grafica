@@ -14,6 +14,76 @@ using namespace std;
 
 // declaracion de Funciones
 
+float* mat_mult(float* m1, float* m2){
+  float* m3 = new float[9];
+  m3[0] = m1[0] * m2[0] + m1[1] * m2[3];
+  m3[1] = m1[0] * m2[1] + m1[1] * m2[4];
+  m3[2] = m1[0] * m2[2] + m1[1] * m2[5] + m1[2];
+
+  m3[3] = m1[3] * m2[0] + m1[4] * m2[3];
+  m3[4] = m1[3] * m2[1] + m1[4] * m2[4];
+  m3[5] = m1[3] * m2[2] + m1[4] * m2[5] + m1[5];
+  m3[6] = 0;
+  m3[7] = 0;
+  m3[8] = 1;
+  return m3;
+}
+
+float* get_mat_traslacion(int dx, int dy){
+  float* mat_temp = new float[9];
+  mat_temp[0] = 1;
+  mat_temp[1] = 0;
+  mat_temp[2] = dx;
+  mat_temp[3] = 0;
+  mat_temp[4] = 1;
+  mat_temp[5] = dy;
+  mat_temp[6] = 0;
+  mat_temp[7] = 0;
+  mat_temp[8] = 1;
+  return mat_temp;
+}
+
+
+float* get_mat_escalamiento(float sx, float sy){
+  float* mat_temp = new float[9];
+  mat_temp[0] = sx;
+  mat_temp[1] = 0;
+  mat_temp[2] = 0;
+  mat_temp[3] = 0;
+  mat_temp[4] = sy;
+  mat_temp[5] = 0;
+  mat_temp[6] = 0;
+  mat_temp[7] = 0;
+  mat_temp[8] = 1;
+  return mat_temp;
+}
+
+float* get_mat_rotacion(float teta){
+  float* mat_temp = new float[9];
+  mat_temp[0] = cos(teta);
+  mat_temp[1] = -sin(teta);
+  mat_temp[2] = 0;
+  mat_temp[3] = sin(teta);
+  mat_temp[4] = cos(teta);
+  mat_temp[5] = 0;
+  mat_temp[6] = 0;
+  mat_temp[7] = 0;
+  mat_temp[8] = 1;
+  return mat_temp;
+}
+
+void load_identity(float* mat){
+  mat[0] = 1;
+  mat[1] = 0;
+  mat[2] = 0;
+  mat[3] = 0;
+  mat[4] = 1;
+  mat[5] = 0;
+  mat[6] = 0;
+  mat[7] = 0;
+  mat[8] = 1;
+}
+
 void draw_line(int, int, int, int);
 void draw_line(int, int, int, int, vector<int>&, vector<int>&);
 void draw_polygon(vector<int>, vector<int>);
@@ -28,6 +98,7 @@ void draw_polygon(vector<int>, vector<int>);
 // Funciones de dibujado
 
 void draw_pixel(int x, int y){
+
     glVertex2i(x, y);
 }
 
