@@ -28,6 +28,7 @@ class figura{
         virtual void paint(){
           bool pintar = false;
           bool cambio = false;
+          glBegin(GL_POINTS);
           for(int j = 0; j < h; j++){
             pintar = false;
             cambio = false;
@@ -44,25 +45,18 @@ class figura{
                   cambio = false;
                 }
                 if(pintar){
-                  // cout<<"assa";
-                  // lienzo[j][i] = true;
-                  glBegin(GL_POINTS);
                   draw_pixel(i + xmin, j + ymin);
-                  glEnd();
-                  glFlush();
-                  // system("pause");
                   puntos_x.push_back(i + xmin);
                   puntos_y.push_back(j + ymin);
                 }
-                // cout<<"cambio: "<<cambio<<endl;
 
               }
 
             }
           }
+          glEnd();
           calc_min_max();
           fill_lienzo();
-          cout<<"painted"<<endl;
         }
 
         virtual void apply_trans(float* mat){
@@ -99,6 +93,7 @@ class figura{
         	}
           puntos_x = res_x;
           puntos_y = res_y;
+          glFlush();
           calc_min_max();
           fill_lienzo();
 
@@ -127,7 +122,6 @@ class figura{
 
         }
         virtual void fill_lienzo(){
-          cout<<"inicio"<<endl;
           h = fabs(ymax - ymin) + 1;
         	w = fabs(xmax - xmin) + 1;
         	lienzo = new bool*[h];
@@ -141,59 +135,12 @@ class figura{
 
 
 
-
-
-          cout<<xmin<<" "<< xmax<<endl;
-          cout<<ymin<<" "<< ymax<<endl;
-          cout<<"dimensiones: "<<h<<" "<<w<<endl;
-
           for(int i = 0; i < puntos_x.size(); i++){
             // cout<<i<<" "<<puntos_x.at(i)<<" "<<puntos_x.at(i) - xmin<<" "<<puntos_y.at(i)<<" "<<puntos_y.at(i) - ymin<<endl;
             lienzo[puntos_y.at(i) - ymin][puntos_x.at(i) - xmin] = true;
 
           }
-          cout<<"lienzo filled"<<endl;
 
-
-
-          //
-        	// float teta = 1.905398;
-          //
-        	// vector<int> res_x;
-        	// vector<int> res_y;
-          //
-        	// int centro_x = (xmin + xmax) / 2;
-        	// int centro_y = (ymin + ymax) / 2;
-          //
-        	// int t_x = -centro_x;
-        	// int t_y = -centro_y;
-          //
-        	// int punto_x, punto_y, n_punto_x, n_punto_y;
-          // cout<<"asassdds"<<endl;
-        	// for(int j = 0; j < h; j++){
-        	// 	for(int i = 0; i < w; i++){
-        	// 		if(lienzo[j][i]){
-        	// 			// cout<<j + ymin<<" "<<i + xmin<<endl;
-        	// 			punto_y = j + ymin ;
-        	// 			punto_x = i + xmin ;
-          //       cout<<"j: "<<j<<" i: "<<i<<" h: "<<h<<" w: "<<w<<" cos : "<<cos(teta)<<" "<<punto_x<<" sin : "<<sin(teta)<<" "<<punto_y <<endl;
-          //       cout<<cos(teta) * (float)punto_x<<" "<<sin(teta) * (float)punto_y<<endl;
-        	// 			cout<<punto_x<<" "<<punto_y<<endl;
-        	// 			n_punto_x = cos(teta) * (float)punto_x - sin(teta) * (float)punto_y;
-        	// 			n_punto_y = sin(teta) * (float)punto_x + cos(teta) * (float)punto_y;
-          //       glBegin(GL_POINTS);
-          //       draw_pixel(n_punto_x, n_punto_y);
-          //       glEnd();
-          //       glFlush();
-          //       // getchar();
-        	// 			res_x.push_back(n_punto_x);
-        	// 			res_y.push_back(n_punto_y);
-          //
-        	// 			cout<<n_punto_x<<" "<<n_punto_y<<endl;
-        	// 		}
-        	// 	}
-        	// }
-          // cout<<"fin"<<endl;
         }
 
 };

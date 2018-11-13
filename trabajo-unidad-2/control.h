@@ -23,6 +23,10 @@ bool b_move = false;
 bool b_rotate = false;
 bool b_scale = false;
 
+bool b_pol_reg_c = false;
+bool b_pol_reg_r = false;
+int temp_x, temp_y;
+
 int color_option, menu_option, draw_option, action_option;
 int fig_pos = 0;
 float* mat_transformacion = new float[9];
@@ -70,24 +74,42 @@ void color_controller(int id){
   glEndList ();
 }
 void menu_controller(int id){
+  glNewList (++numberOfLists, GL_COMPILE_AND_EXECUTE);
+  switch (id){
 
+      case 2 :
+          figuras.clear();
+          refresh();
+          fig_pos = 0;
+          break;
+      case 3 :
+
+          exit(0);
+          break;
+
+      default : /* for any case not covered above, leave line thickness unchanged */
+          break;
+  }
+  glEndList ();
 }
 void draw_controller(int id){
 
   glNewList (++numberOfLists, GL_COMPILE_AND_EXECUTE);
   switch (id){
       case 1 :
-          break;
-      case 2 :
-          save_points = true;
-          break;
-      case 3 :
+          system("clear");
+          cout<<"Seleccione un punto como centro del poligono"<<endl;
+          b_pol_reg_c = true;
+          b_pol_reg_r = true;
 
           break;
-      case 4:
+      case 2 :
+          system("clear");
+          cout<<"Seleccione los vertices del poligono"<<endl;
+          cout<<"Presione  d  al terminar"<<endl;
+          save_points = true;
           break;
-      case 5 :
-          break;
+
       default : /* for any case not covered above, leave line thickness unchanged */
           break;
   }
@@ -96,16 +118,30 @@ void draw_controller(int id){
 void action_controller(int id){
   glNewList (++numberOfLists, GL_COMPILE_AND_EXECUTE);
   switch (id){
-      case 1 :
+      case 0:
+          system("clear");
+          cout<<"Ingrese el numero de la figura que modificara"<<endl;
+          cin>>fig_pos;
+          break;
+      case 1:
+          system("clear");
+          cout<<"Seleccione el punto al que se movera con click izquierdo"<<endl;
+
           b_move = true;
           break;
       case 2 :
+          system("clear");
+          cout<<"Seleccione el punto de referencia para escalar con click izquierdo"<<endl;
           b_scale = true;
           break;
       case 3 :
 
-
+          system("clear");
+          cout<<"Seleccione el punto de referencia para rotar con click izquierdo"<<endl;
           b_rotate = true;
+          break;
+      case 4 :
+          figuras[fig_pos]->paint();
           break;
 
       default : /* for any case not covered above, leave line thickness unchanged */
@@ -136,17 +172,17 @@ void init(){
   draw_option =  glutCreateMenu (draw_controller);
       glutAddMenuEntry ("P.regular", 1);
       glutAddMenuEntry ("P.irregular", 2);
-      glutAddMenuEntry ("Linea", 3);
-      glutAddMenuEntry ("Circulo", 4);
-      glutAddMenuEntry ("Parabola", 5);
+
   action_option = glutCreateMenu(action_controller);
+      glutAddMenuEntry ("Seleccionar Figura", 0);
       glutAddMenuEntry ("Mover", 1);
       glutAddMenuEntry ("Escalar", 2);
       glutAddMenuEntry ("Rotar", 3);
+      glutAddMenuEntry ("Colorear", 4);
 
   menu_option = glutCreateMenu (menu_controller);
-      glutAddSubMenu ("Color", color_option);
       glutAddSubMenu ("Figura", draw_option);
+      glutAddSubMenu ("Color", color_option);
       glutAddSubMenu ("Accion", action_option);
       glutAddMenuEntry ("Limpiar ventana", 2);
       glutAddMenuEntry ("Salir", 3);
@@ -171,11 +207,14 @@ void mouse_controller(int button, int state, int mouse_x, int mouse_y){
       float* mat_temp = get_mat_traslacion(pos_x - figuras.at(fig_pos)->xmin, pos_y - figuras.at(fig_pos)->ymin);
       mat_transformacion = mat_mult(mat_temp, mat_transformacion);
       b_move = false;
+      cout<<"Presione r para realizar la transformacion"<<endl;
+
     }
     if(b_rotate){
       float teta;
-      cout<<"inserte angulo: ";
+      cout<<"Inserte angulo en degrees: ";
       cin>>teta;
+      teta *= 0.0174533;
 
       float* mat_traslacion = get_mat_traslacion( -pos_x , -pos_y);
       float* mat_traslacion_inversa = get_mat_traslacion( pos_x , pos_y);
@@ -185,13 +224,15 @@ void mouse_controller(int button, int state, int mouse_x, int mouse_y){
       mat_transformacion = mat_mult(mat_rotacion, mat_transformacion);
       mat_transformacion = mat_mult(mat_traslacion_inversa, mat_transformacion);
       b_rotate = false;
+      cout<<"Presione r para realizar la transformacion"<<endl;
+
     }
 
     if(b_scale){
       float sx, sy;
-      cout<<"inserte sx: ";
+      cout<<"Inserte sx: ";
       cin>>sx;
-      cout<<"inserte sy: ";
+      cout<<"Inserte sy: ";
       cin>>sy;
 
       float* mat_traslacion = get_mat_traslacion( -pos_x , -pos_y);
@@ -202,6 +243,34 @@ void mouse_controller(int button, int state, int mouse_x, int mouse_y){
       mat_transformacion = mat_mult(mat_escalamiento, mat_transformacion);
       mat_transformacion = mat_mult(mat_traslacion_inversa, mat_transformacion);
       b_scale = false;
+      cout<<"Presione r para realizar la transformacion"<<endl;
+
+    }
+    if(b_pol_reg_r){
+      if(b_pol_reg_c){
+        temp_x = pos_x;
+        temp_y = pos_y;
+        b_pol_reg_c = false;
+
+        cout<<"Seleccione un punto para calcular el radio desde el centro"<<endl;
+      }
+      else{
+        int radio = sqrt(pow(temp_x - pos_x, 2) + pow(temp_y - pos_y, 2));
+        vector<int> xs, ys;
+        int n_lados;
+        cout<<"Ingrese el numero de lados: ";
+        cin>>n_lados;
+        calc_regular_polygon(temp_x, temp_y, n_lados, radio, xs, ys);
+        figura * fig = new poligono(xs, ys);
+        fig->draw();
+        fig->calc_min_max();
+        fig->fill_lienzo();
+        glFlush();
+        figuras.push_back(fig);
+        b_pol_reg_r = false;
+        cout<<"Figura "<<figuras.size() - 1<<" creada"<<endl;
+
+      }
     }
 
 
@@ -215,24 +284,27 @@ void keyboard_controller(unsigned char key, int x, int y){
   float* mat;
 	switch (key){
 	case 'd':
-    fig = new poligono(cola_puntos_x, cola_puntos_y);
-    figuras.push_back(fig);
-    fig->draw();
-    fig->calc_min_max();
-    fig->fill_lienzo();
-    fig->paint();
+    if(save_points){
+
+      fig = new poligono(cola_puntos_x, cola_puntos_y);
+      figuras.push_back(fig);
+      fig->draw();
+      fig->calc_min_max();
+      fig->fill_lienzo();
 
 
 
-    cola_puntos_x.clear();
-    cola_puntos_y.clear();
-    save_points = false;
-    glFlush();
 
-    refresh();
+      cola_puntos_x.clear();
+      cola_puntos_y.clear();
+      save_points = false;
+
+      cout<<"Figura "<<figuras.size() - 1<<" creada"<<endl;
+      refresh();
+    }
 		break;
 
-  case 'o':
+  case 'r':
     cout<<"Done"<<endl;
     figuras.at(fig_pos)->apply_trans(mat_transformacion);
     load_identity(mat_transformacion);
@@ -249,13 +321,7 @@ void keyboard_controller(unsigned char key, int x, int y){
 
 
 void display(){
-  // vector<int> xs;
-  // vector<int> ys;
 
-  // calc_regular_polygon(0, 0, 7, 100, xs, ys);
-
-  // draw_line(0, 0, 100, 100);
-  // draw_polygon(xs, ys);
 
 
   glFlush();
