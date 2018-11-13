@@ -220,6 +220,7 @@ void keyboard_controller(unsigned char key, int x, int y){
     fig->draw();
     fig->calc_min_max();
     fig->fill_lienzo();
+    fig->paint();
 
 
 
@@ -228,7 +229,7 @@ void keyboard_controller(unsigned char key, int x, int y){
     save_points = false;
     glFlush();
 
-    // refresh();
+    refresh();
 		break;
 
   case 'o':

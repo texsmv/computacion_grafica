@@ -10,6 +10,8 @@ class figura{
         bool **lienzo;
         vector<int> puntos_x;
         vector<int> puntos_y;
+        vector<int> vertices_x;
+        vector<int> vertices_y;
         figura(){}
         ~figura(){}
         virtual void draw(){}
@@ -22,6 +24,47 @@ class figura{
           glEnd();
           glFlush();
         }
+
+        virtual void paint(){
+          bool pintar = false;
+          bool cambio = false;
+          for(int j = 0; j < h; j++){
+            pintar = false;
+            cambio = false;
+            for(int i = 0; i < w; i++){
+              if(!is_in(i + xmin, j + ymin, vertices_x, vertices_y)){
+                if(lienzo[j][i] == true){
+                  cambio = true;
+                }
+                if(cambio && !lienzo[j][i]){
+                  if(pintar)
+                  pintar = false;
+                  else
+                  pintar = true;
+                  cambio = false;
+                }
+                if(pintar){
+                  // cout<<"assa";
+                  // lienzo[j][i] = true;
+                  glBegin(GL_POINTS);
+                  draw_pixel(i + xmin, j + ymin);
+                  glEnd();
+                  glFlush();
+                  // system("pause");
+                  puntos_x.push_back(i + xmin);
+                  puntos_y.push_back(j + ymin);
+                }
+                // cout<<"cambio: "<<cambio<<endl;
+
+              }
+
+            }
+          }
+          calc_min_max();
+          fill_lienzo();
+          cout<<"painted"<<endl;
+        }
+
         virtual void apply_trans(float* mat){
 
 

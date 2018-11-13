@@ -14,6 +14,17 @@ using namespace std;
 
 // declaracion de Funciones
 
+bool is_in(int x, int y, vector<int> xs, vector<int> ys){
+  cout<<" ---------  "<<xs.size()<<endl;
+  int radio = 2;
+  for(int i =0; i < xs.size(); i++){
+    if(fabs(x - xs[i]) < radio  && fabs(y - ys[i]) < radio){
+      return true;
+    }
+  }
+  return false;
+}
+
 float* mat_mult(float* m1, float* m2){
   float* m3 = new float[9];
   m3[0] = m1[0] * m2[0] + m1[1] * m2[3];
